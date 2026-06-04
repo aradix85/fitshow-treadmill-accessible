@@ -1,0 +1,9 @@
+# Logs van de reverse-engineer-tools
+sessie_log.txt
+verkenning_log.txt
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
