@@ -113,11 +113,16 @@ struct TreadmillStatusIntent: AppIntent {
     }
 }
 
-/// Ready-made Siri phrases. These only reach Siri when the app carries the
-/// com.apple.developer.siri entitlement, which a free Apple ID does not get.
-/// Without it the intents still appear in the Shortcuts app, and a shortcut
-/// you name yourself is callable by voice — see ios/README.md.
+/// Ready-made Siri phrases, available without any user setup.
+/// Apple scopes the com.apple.developer.siri entitlement to Intents app
+/// extensions handling Siri requests *other than shortcut requests* — this app
+/// has no extension and these are shortcut requests, so it should not apply.
+/// If Siri ignores the phrases anyway, make your own shortcut instead and give
+/// it whatever name you like; that route never needs an entitlement.
+/// Note that Apple requires the app name inside each phrase.
 struct LoopbandShortcuts: AppShortcutsProvider {
+    // Without @AppShortcutsBuilder, Siri only ever recognises the FIRST entry.
+    @AppShortcutsBuilder
     static var appShortcuts: [AppShortcut] {
         AppShortcut(intent: FasterIntent(),
                     phrases: ["Sneller in \(.applicationName)"],
