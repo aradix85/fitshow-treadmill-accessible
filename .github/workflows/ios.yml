@@ -1,0 +1,52 @@
+name: Build unsigned iOS app
+
+# Builds an unsigned .ipa on a free GitHub-hosted macOS runner.
+# You sign it afterwards on your own machine with AltStore/SideStore/Sideloadly,
+# using a free Apple ID. No Apple Developer Program membership involved.
+
+on:
+  push:
+    paths:
+      - 'ios/**'
+      - '.github/workflows/ios.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate the Xcode project
+        working-directory: ios
+        run: xcodegen generate
+
+      - name: Build (code signing off)
+        working-directory: ios
+        run: |
+          xcodebuild \
+            -project Loopband.xcodeproj \
+            -scheme Loopband \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Wrap the .app in an .ipa
+        working-directory: ios
+        run: |
+          mkdir -p Payload
+          cp -R build/Build/Products/Release-iphoneos/Loopband.app Payload/
+          zip -qry Loopband-unsigned.ipa Payload
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Loopband-unsigned-ipa
+          path: ios/Loopband-unsigned.ipa

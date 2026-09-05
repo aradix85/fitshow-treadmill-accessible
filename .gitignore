@@ -7,3 +7,9 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+  
+# iOS build output  
+ios/Loopband.xcodeproj/  
+ios/build/  
+ios/Payload/  
+ios/*.ipa  
