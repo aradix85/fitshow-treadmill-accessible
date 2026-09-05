@@ -41,6 +41,10 @@ final class Treadmill: NSObject, ObservableObject, @unchecked Sendable {
     private var waiters: [(Error?) -> Void] = []
     private var timeoutTimer: Timer?
 
+    /// One list of callbacks per opcode, resolved when the treadmill sends its
+    /// `80 <opcode> <result>` indication back.
+    fileprivate var ackWaiters: [UInt8: [(Error?) -> Void]] = [:]
+
     private static let savedIDKey = "treadmill.peripheral.identifier"
 
     private override init() {
@@ -190,6 +194,10 @@ extension Treadmill: CBCentralManagerDelegate {
         isWriting = false
         writeQueue.removeAll()
         statusText = status
+        // Don't leave a command hanging on a connection that no longer exists.
+        let orphaned = ackWaiters.values.flatMap { $0 }
+        ackWaiters.removeAll()
+        orphaned.forEach { $0(TreadmillError.noReply) }
     }
 }
 
@@ -254,11 +262,18 @@ extension Treadmill: CBPeripheralDelegate {
     private func handleControlResponse(_ bytes: [UInt8]) {
         // Reply format: 80 <opcode> <result>, where 01 means success.
         guard bytes.count >= 3, bytes[0] == 0x80 else { return }
-        if bytes[1] == FTMS.opRequestControl && bytes[2] == 0x01 {
+        let opcode = bytes[1]
+        let accepted = bytes[2] == 0x01
+
+        if opcode == FTMS.opRequestControl && accepted {
             hasControl = true
             statusText = "Verbonden."
             finishWaiters(nil)
         }
+
+        // Release whoever is waiting on this particular command.
+        let pending = ackWaiters.removeValue(forKey: opcode) ?? []
+        pending.forEach { $0(accepted ? nil : TreadmillError.rejected) }
     }
 }
 
@@ -321,8 +336,25 @@ extension Treadmill {
         p.writeValue(Data(writeQueue.removeFirst()), for: cp, type: .withResponse)
     }
 
-    private func send(_ payload: [UInt8]) {
-        DispatchQueue.main.async { self.enqueue(payload) }
+    /// Send a command and wait for the treadmill to acknowledge it.
+    /// Nothing is spoken to the user until this returns without throwing, so a
+    /// number you hear always means the treadmill actually took the command.
+    private func send(_ payload: [UInt8], timeout: TimeInterval = 4) async throws {
+        try await withCheckedThrowingContinuation { cont in
+            DispatchQueue.main.async {
+                var settled = false
+                let settle: (Error?) -> Void = { error in
+                    guard !settled else { return }
+                    settled = true
+                    if let error { cont.resume(throwing: error) } else { cont.resume() }
+                }
+                self.ackWaiters[payload[0], default: []].append(settle)
+                DispatchQueue.main.asyncAfter(deadline: .now() + timeout) {
+                    settle(TreadmillError.noReply)
+                }
+                self.enqueue(payload)
+            }
+        }
     }
 
     private static func le16(_ value: Int) -> [UInt8] {
@@ -330,25 +362,26 @@ extension Treadmill {
         return [UInt8(v & 0xFF), UInt8(v >> 8)]
     }
 
-    // Each command returns the sentence Siri should speak back.
+    // Each command returns the sentence Siri should speak back. The setpoint is
+    // only updated after the treadmill confirms, so a rejected command never
+    // leaves us with a wrong idea of where the belt is.
 
     @discardableResult
     func start() async throws -> String {
         try await ensureReady()
+        try await send([FTMS.opReset])
+        try await send([FTMS.opSetSpeed] + Self.le16(Int((Limits.speedStart * 100).rounded())))
+        try await send([FTMS.opStart])
         targetSpeed = Limits.speedStart
-        send([FTMS.opReset])
-        send([FTMS.opSetSpeed] + Self.le16(Int((Limits.speedStart * 100).rounded())))
-        send([FTMS.opStart])
-        await MainActor.run { isRunning = true }
+        // isRunning is not set here: the treadmill reports it over 2AD3.
         return "Gestart op \(spoken(Limits.speedStart, decimals: 0)) kilometer per uur."
     }
 
     @discardableResult
     func stop() async throws -> String {
         try await ensureReady()
-        send([FTMS.opStop, 0x01])
+        try await send([FTMS.opStop, 0x01])
         targetSpeed = 0
-        await MainActor.run { isRunning = false }
         return "Gestopt."
     }
 
@@ -356,10 +389,11 @@ extension Treadmill {
     func setSpeed(_ kmh: Double) async throws -> String {
         try await ensureReady()
         let clamped = min(Limits.speedMax, max(Limits.speedMin, (kmh * 10).rounded() / 10))
+        try await send([FTMS.opSetSpeed] + Self.le16(Int((clamped * 100).rounded())))
         targetSpeed = clamped
-        send([FTMS.opSetSpeed] + Self.le16(Int((clamped * 100).rounded())))
         var line = "Snelheid \(spoken(clamped)) kilometer per uur."
         if clamped >= Limits.speedMax { line += " Dit is het maximum." }
+        if !isRunning { line += " De band loopt niet." }
         return line
     }
 
@@ -367,8 +401,8 @@ extension Treadmill {
     func setIncline(_ percent: Double) async throws -> String {
         try await ensureReady()
         let clamped = min(Limits.inclineMax, max(Limits.inclineMin, percent.rounded()))
+        try await send([FTMS.opSetIncline] + Self.le16(Int((clamped * 10).rounded())))
         targetIncline = clamped
-        send([FTMS.opSetIncline] + Self.le16(Int((clamped * 10).rounded())))
         var line = "Helling \(spoken(clamped, decimals: 0)) procent."
         if clamped >= Limits.inclineMax { line += " Dit is het maximum." }
         return line

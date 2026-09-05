@@ -33,12 +33,16 @@ enum TreadmillError: LocalizedError {
     case bluetoothOff
     case notFound
     case timedOut
+    case rejected
+    case noReply
 
     var errorDescription: String? {
         switch self {
         case .bluetoothOff: return "Bluetooth staat uit."
         case .notFound:     return "Loopband niet gevonden."
         case .timedOut:     return "Geen verbinding met de loopband."
+        case .rejected:     return "De loopband weigerde het commando."
+        case .noReply:      return "De loopband bevestigde niets."
         }
     }
 }
