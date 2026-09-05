@@ -76,9 +76,10 @@ struct SetSpeedIntent: AppIntent {
     static var openAppWhenRun = false
     static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
+    // inclusiveRange must come before requestValueDialog, and needs literals.
     @Parameter(title: "Snelheid in km/h",
-               requestValueDialog: IntentDialog("Welke snelheid?"),
-               inclusiveRange: (Limits.speedMin, Limits.speedMax))
+               inclusiveRange: (1.0, 22.0),
+               requestValueDialog: IntentDialog("Welke snelheid?"))
     var speed: Double
 
     static var parameterSummary: some ParameterSummary {
@@ -97,8 +98,8 @@ struct SetInclineIntent: AppIntent {
     static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
     @Parameter(title: "Helling in procent",
-               requestValueDialog: IntentDialog("Welke helling?"),
-               inclusiveRange: (Limits.inclineMin, Limits.inclineMax))
+               inclusiveRange: (0.0, 15.0),
+               requestValueDialog: IntentDialog("Welke helling?"))
     var incline: Double
 
     static var parameterSummary: some ParameterSummary {

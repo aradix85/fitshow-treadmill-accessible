@@ -6,8 +6,8 @@ import Foundation
 ///
 /// Everything runs on the main queue on purpose: CoreBluetooth is created with
 /// `queue: .main`, so all delegate callbacks arrive there too and no locking is
-/// needed anywhere in this file.
-final class Treadmill: NSObject, ObservableObject {
+/// needed anywhere in this file. That is also why @unchecked Sendable is safe.
+final class Treadmill: NSObject, ObservableObject, @unchecked Sendable {
 
     static let shared = Treadmill()
 
@@ -144,7 +144,7 @@ extension Treadmill: CBCentralManagerDelegate {
 
     func centralManager(_ central: CBCentralManager,
                         willRestoreState dict: [String: Any]) {
-        if let restored = dict[CBCentralManagerRestoredStatePeripherals] as? [CBPeripheral],
+        if let restored = dict[CBCentralManagerRestoredStatePeripheralsKey] as? [CBPeripheral],
            let p = restored.first {
             peripheral = p
             p.delegate = self
