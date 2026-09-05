@@ -340,7 +340,7 @@ extension Treadmill {
     /// Nothing is spoken to the user until this returns without throwing, so a
     /// number you hear always means the treadmill actually took the command.
     private func send(_ payload: [UInt8], timeout: TimeInterval = 4) async throws {
-        try await withCheckedThrowingContinuation { cont in
+        try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
             DispatchQueue.main.async {
                 var settled = false
                 let settle: (Error?) -> Void = { error in
