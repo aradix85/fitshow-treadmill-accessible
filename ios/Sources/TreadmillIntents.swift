@@ -8,6 +8,7 @@ struct StartTreadmillIntent: AppIntent {
     static var title: LocalizedStringResource = "Loopband starten"
     static var description = IntentDescription("Start de band op de laagste snelheid.")
     static var openAppWhenRun = false
+    static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
         .result(dialog: IntentDialog(stringLiteral: try await Treadmill.shared.start()))
@@ -18,6 +19,7 @@ struct StopTreadmillIntent: AppIntent {
     static var title: LocalizedStringResource = "Loopband stoppen"
     static var description = IntentDescription("Stopt de band. Dit is geen noodstop.")
     static var openAppWhenRun = false
+    static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
         .result(dialog: IntentDialog(stringLiteral: try await Treadmill.shared.stop()))
@@ -27,6 +29,7 @@ struct StopTreadmillIntent: AppIntent {
 struct FasterIntent: AppIntent {
     static var title: LocalizedStringResource = "Sneller"
     static var openAppWhenRun = false
+    static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let line = try await Treadmill.shared.changeSpeed(by: Limits.speedStep)
@@ -37,6 +40,7 @@ struct FasterIntent: AppIntent {
 struct SlowerIntent: AppIntent {
     static var title: LocalizedStringResource = "Langzamer"
     static var openAppWhenRun = false
+    static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let line = try await Treadmill.shared.changeSpeed(by: -Limits.speedStep)
@@ -47,6 +51,7 @@ struct SlowerIntent: AppIntent {
 struct SteeperIntent: AppIntent {
     static var title: LocalizedStringResource = "Steiler"
     static var openAppWhenRun = false
+    static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let line = try await Treadmill.shared.changeIncline(by: Limits.inclineStep)
@@ -57,6 +62,7 @@ struct SteeperIntent: AppIntent {
 struct FlatterIntent: AppIntent {
     static var title: LocalizedStringResource = "Vlakker"
     static var openAppWhenRun = false
+    static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let line = try await Treadmill.shared.changeIncline(by: -Limits.inclineStep)
@@ -68,6 +74,7 @@ struct FlatterIntent: AppIntent {
 struct SetSpeedIntent: AppIntent {
     static var title: LocalizedStringResource = "Snelheid instellen"
     static var openAppWhenRun = false
+    static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
     @Parameter(title: "Snelheid in km/h",
                requestValueDialog: IntentDialog("Welke snelheid?"),
@@ -87,6 +94,7 @@ struct SetSpeedIntent: AppIntent {
 struct SetInclineIntent: AppIntent {
     static var title: LocalizedStringResource = "Helling instellen"
     static var openAppWhenRun = false
+    static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
     @Parameter(title: "Helling in procent",
                requestValueDialog: IntentDialog("Welke helling?"),
@@ -106,6 +114,7 @@ struct SetInclineIntent: AppIntent {
 struct TreadmillStatusIntent: AppIntent {
     static var title: LocalizedStringResource = "Loopbandstatus"
     static var openAppWhenRun = false
+    static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let line = try await Treadmill.shared.statusSentence()
