@@ -304,7 +304,8 @@ extension Treadmill {
         func signed16(_ v: Int) -> Int { v > 0x7FFF ? v - 0x10000 : v }
         func has(_ bit: Int) -> Bool { flags & (1 << bit) != 0 }
 
-        if let v = take(2) { speed = Double(v) / 100 }
+        // FTMS: bit 0 clear means instantaneous speed IS present.
+        if !has(0), let v = take(2) { speed = Double(v) / 100 }
         if has(1) { _ = take(2) }                                   // average speed
         if has(2), let v = take(3) { distanceM = v }
         if has(3), i + 4 <= b.count {
@@ -331,9 +332,10 @@ extension Treadmill {
         if has(10), let v = take(2) { elapsedS = v }
 
         packetCount += 1
-        diagnostics = "Pakket \(packetCount), \(b.count) bytes, "
+        let hex = b.map { String(format: "%02x", $0) }.joined(separator: " ")
+        diagnostics = "Pakket \(packetCount): \(b.count) bytes, "
             + "vlaggen 0x\(String(format: "%04X", flags)), "
-            + "\(i) bytes gelezen."
+            + "\(i) gelezen. Ruw: \(hex)"
     }
 }
 
@@ -353,21 +355,28 @@ extension Treadmill {
         p.writeValue(Data(writeQueue.removeFirst()), for: cp, type: .withResponse)
     }
 
-    /// Send a command and wait for the treadmill to acknowledge it.
-    /// Nothing is spoken to the user until this returns without throwing, so a
-    /// number you hear always means the treadmill actually took the command.
-    private func send(_ payload: [UInt8], timeout: TimeInterval = 4) async throws {
+    /// Send a command and give the treadmill a moment to acknowledge it.
+    ///
+    /// An explicit refusal is an error worth telling the user about. A missing
+    /// reply is not: tr600i_server.py never waited for one and worked fine for
+    /// months, so treating silence as failure would invent a problem that the
+    /// proven implementation does not have.
+    private func send(_ payload: [UInt8], timeout: TimeInterval = 2.5) async throws {
         try await withCheckedThrowingContinuation { (cont: CheckedContinuation<Void, Error>) in
             DispatchQueue.main.async {
                 var settled = false
                 let settle: (Error?) -> Void = { error in
                     guard !settled else { return }
                     settled = true
-                    if let error { cont.resume(throwing: error) } else { cont.resume() }
+                    if let error, case TreadmillError.rejected = error {
+                        cont.resume(throwing: error)
+                    } else {
+                        cont.resume()          // ack ok, or no ack at all
+                    }
                 }
                 self.ackWaiters[payload[0], default: []].append(settle)
                 DispatchQueue.main.asyncAfter(deadline: .now() + timeout) {
-                    settle(TreadmillError.noReply)
+                    settle(nil)
                 }
                 self.enqueue(payload)
             }
