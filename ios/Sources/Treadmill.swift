@@ -22,6 +22,11 @@ final class Treadmill: NSObject, ObservableObject, @unchecked Sendable {
     @Published private(set) var elapsedS = 0
     @Published private(set) var kcal = 0
 
+    /// Raw view of the last 2ACD packet, so parsing problems are visible on
+    /// screen instead of having to be guessed at.
+    @Published private(set) var diagnostics = "Nog geen meetgegevens ontvangen."
+    private var packetCount = 0
+
     // MARK: - What we asked for (the belt follows with a delay)
 
     private(set) var targetSpeed = Limits.speedStart
@@ -324,6 +329,11 @@ extension Treadmill {
         if has(8) { _ = take(1) }                                   // heart rate
         if has(9) { _ = take(1) }                                   // metabolic equivalent
         if has(10), let v = take(2) { elapsedS = v }
+
+        packetCount += 1
+        diagnostics = "Pakket \(packetCount), \(b.count) bytes, "
+            + "vlaggen 0x\(String(format: "%04X", flags)), "
+            + "\(i) bytes gelezen."
     }
 }
 

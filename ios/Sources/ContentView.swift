@@ -21,24 +21,35 @@ struct ContentView: View {
         .padding()
     }
 
-    /// Tap to hear the numbers. It deliberately does not announce on its own.
+    /// The numbers live in the accessibility label itself, so swiping here reads
+    /// the real parsed values without an announcement being involved at all.
+    /// Double-tapping still speaks the full sentence.
     private var statusArea: some View {
-        Button {
-            Task {
+        let minutes = treadmill.elapsedS / 60
+        let seconds = treadmill.elapsedS % 60
+        let km = Double(treadmill.distanceM) / 1000
+        let spokenValues = "\(spoken(treadmill.speed)) kilometer per uur, "
+            + "helling \(spoken(treadmill.incline, decimals: 0)) procent, "
+            + "\(spoken(km, decimals: 2)) kilometer, "
+            + "\(minutes) minuten \(seconds) seconden, "
+            + "\(treadmill.kcal) calorieën"
+
+        return Button {
+            Task { @MainActor in
                 let line = (try? await treadmill.statusSentence()) ?? treadmill.statusText
                 announce(line)
             }
         } label: {
             VStack(alignment: .leading, spacing: 4) {
                 Text(treadmill.statusText).font(.headline)
-                Text("\(spoken(treadmill.speed)) km/u · \(spoken(treadmill.incline, decimals: 0))% · "
-                     + "\(spoken(Double(treadmill.distanceM) / 1000, decimals: 2)) km")
-                    .font(.title3)
+                Text(spokenValues).font(.title3)
+                Text(treadmill.diagnostics).font(.footnote)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("Status. Dubbeltik om snelheid, helling, afstand en tijd te horen.")
+        .accessibilityLabel("\(treadmill.statusText). \(spokenValues). \(treadmill.diagnostics)")
+        .accessibilityHint("Dubbeltik om het opnieuw te horen.")
     }
 }
 
@@ -57,7 +68,7 @@ struct BigButton: View {
 
     var body: some View {
         Button {
-            Task {
+            Task { @MainActor in
                 do    { announce(try await action()) }
                 catch { announce(error.localizedDescription) }
             }
