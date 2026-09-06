@@ -29,6 +29,10 @@ enum Limits {
     static let inclineMin  = 0.0
     static let inclineMax  = 15.0
     static let inclineStep = 1.0
+
+    /// Level the belt out when you stop, so you never step onto an incline you
+    /// forgot about. Set to false if you would rather keep the setting.
+    static let levelInclineOnStop = true
 }
 
 enum TreadmillError: LocalizedError {

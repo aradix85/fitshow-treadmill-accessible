@@ -393,12 +393,28 @@ extension Treadmill {
         return "Gestart op \(spoken(Limits.speedStart)) kilometer per uur."
     }
 
+    /// Queue a command without waiting for its acknowledgement. Used where a
+    /// delay would be worse than not knowing whether it landed.
+    private func fireAndForget(_ payload: [UInt8]) {
+        DispatchQueue.main.async { self.enqueue(payload) }
+    }
+
     @discardableResult
     func stop() async throws -> String {
         try await ensureReady()
+
+        // Level the belt first so you don't step onto an incline next time.
+        // Queued without waiting: nothing may delay the stop itself.
+        var line = "Gestopt."
+        if Limits.levelInclineOnStop && targetIncline > Limits.inclineMin {
+            fireAndForget([FTMS.opSetIncline] + Self.le16(0))
+            targetIncline = 0
+            line += " Helling terug naar nul."
+        }
+
         try await send([FTMS.opStop, 0x01])
         targetSpeed = 0
-        return "Gestopt."
+        return line
     }
 
     @discardableResult

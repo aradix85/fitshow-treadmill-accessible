@@ -49,6 +49,8 @@ SNELHEID_STAP = 0.5       # km/h per press of faster/slower
 HELLING_MIN = 0.0
 HELLING_MAX = 15.0        # this model caps at 15%
 HELLING_STAP = 1.0        # % per press
+# Level the belt out when you stop, so you never step onto a forgotten incline.
+HELLING_BIJ_STOP_NAAR_NUL = True
 # ----------------------------
 
 CONTROL_POINT_CHAR = "00002ad9-0000-1000-8000-00805f9b34fb"
@@ -241,9 +243,21 @@ async def cmd_helling(helling):
 
 
 async def cmd_stop():
+    """Stop the belt, levelling the incline first.
+
+    Returns a bit of extra text for the spoken confirmation, or "" if the belt
+    was already flat. Note this only applies to stopping from the app: if you
+    use the physical STOP button or the safety key, the incline stays put.
+    """
+    extra = ""
+    if HELLING_BIJ_STOP_NAAR_NUL and S.ingesteld_helling > HELLING_MIN:
+        await stuur(bytes([OP_SET_INCLINE]) + (0).to_bytes(2, "little", signed=True))
+        S.ingesteld_helling = 0.0
+        extra = " Incline back to zero."
     await stuur(bytes([OP_STOP, 0x01]))
     S.lopend = False
     S.ingesteld_snelheid = 0.0
+    return extra
 
 
 # ---- Bluetooth background task: connect and read ----
@@ -491,8 +505,7 @@ async def cmd(actie):
         await cmd_start()
         melding = f"Started at {SNELHEID_START:.1f} kilometers per hour."
     elif actie == "stop":
-        await cmd_stop()
-        melding = "Stopped."
+        melding = "Stopped." + await cmd_stop()
     elif actie == "sneller":
         await cmd_snelheid(volgende_stap(S.ingesteld_snelheid, +1))
         melding = f"Speed {S.ingesteld_snelheid:.1f} kilometers per hour."
