@@ -144,6 +144,12 @@ struct LoopbandShortcuts: AppShortcutsProvider {
         AppShortcut(intent: SlowerIntent(),
                     phrases: ["Langzamer in \(.applicationName)"],
                     shortTitle: "Langzamer", systemImageName: "tortoise")
+        AppShortcut(intent: SteeperIntent(),
+                    phrases: ["Steiler in \(.applicationName)"],
+                    shortTitle: "Steiler", systemImageName: "arrow.up.right")
+        AppShortcut(intent: FlatterIntent(),
+                    phrases: ["Vlakker in \(.applicationName)"],
+                    shortTitle: "Vlakker", systemImageName: "arrow.down.right")
         AppShortcut(intent: StartTreadmillIntent(),
                     phrases: ["Start \(.applicationName)"],
                     shortTitle: "Starten", systemImageName: "play")
