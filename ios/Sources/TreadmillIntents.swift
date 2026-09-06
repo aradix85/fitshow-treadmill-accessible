@@ -1,8 +1,16 @@
 import AppIntents
 
-/// Every intent returns a spoken sentence, so Siri reads back what happened.
-/// `openAppWhenRun = false` keeps the app in the background — the Bluetooth
-/// connection lives in the same process, so the command runs without any UI.
+/// Every intent speaks its own sentence via Speaker rather than returning a
+/// dialog, because dialog results are not read aloud in every invocation path.
+/// Errors still surface through Siri the normal way.
+
+/// Shared plumbing: run a treadmill command, say the result, done.
+@discardableResult
+private func runAndSpeak(_ work: () async throws -> String) async throws -> String {
+    let line = try await work()
+    await Speaker.shared.say(line)
+    return line
+}
 
 struct StartTreadmillIntent: AppIntent {
     static var title: LocalizedStringResource = "Loopband starten"
@@ -10,8 +18,9 @@ struct StartTreadmillIntent: AppIntent {
     static var openAppWhenRun = false
     static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
-    func perform() async throws -> some IntentResult & ProvidesDialog {
-        .result(dialog: IntentDialog(stringLiteral: try await Treadmill.shared.start()))
+    func perform() async throws -> some IntentResult {
+        try await runAndSpeak { try await Treadmill.shared.start() }
+        return .result()
     }
 }
 
@@ -21,8 +30,9 @@ struct StopTreadmillIntent: AppIntent {
     static var openAppWhenRun = false
     static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
-    func perform() async throws -> some IntentResult & ProvidesDialog {
-        .result(dialog: IntentDialog(stringLiteral: try await Treadmill.shared.stop()))
+    func perform() async throws -> some IntentResult {
+        try await runAndSpeak { try await Treadmill.shared.stop() }
+        return .result()
     }
 }
 
@@ -31,9 +41,9 @@ struct FasterIntent: AppIntent {
     static var openAppWhenRun = false
     static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
-    func perform() async throws -> some IntentResult & ProvidesDialog {
-        let line = try await Treadmill.shared.changeSpeed(by: Limits.speedStep)
-        return .result(dialog: IntentDialog(stringLiteral: line))
+    func perform() async throws -> some IntentResult {
+        try await runAndSpeak { try await Treadmill.shared.changeSpeed(by: Limits.speedStep) }
+        return .result()
     }
 }
 
@@ -42,9 +52,9 @@ struct SlowerIntent: AppIntent {
     static var openAppWhenRun = false
     static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
-    func perform() async throws -> some IntentResult & ProvidesDialog {
-        let line = try await Treadmill.shared.changeSpeed(by: -Limits.speedStep)
-        return .result(dialog: IntentDialog(stringLiteral: line))
+    func perform() async throws -> some IntentResult {
+        try await runAndSpeak { try await Treadmill.shared.changeSpeed(by: -Limits.speedStep) }
+        return .result()
     }
 }
 
@@ -53,9 +63,9 @@ struct SteeperIntent: AppIntent {
     static var openAppWhenRun = false
     static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
-    func perform() async throws -> some IntentResult & ProvidesDialog {
-        let line = try await Treadmill.shared.changeIncline(by: Limits.inclineStep)
-        return .result(dialog: IntentDialog(stringLiteral: line))
+    func perform() async throws -> some IntentResult {
+        try await runAndSpeak { try await Treadmill.shared.changeIncline(by: Limits.inclineStep) }
+        return .result()
     }
 }
 
@@ -64,19 +74,19 @@ struct FlatterIntent: AppIntent {
     static var openAppWhenRun = false
     static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
-    func perform() async throws -> some IntentResult & ProvidesDialog {
-        let line = try await Treadmill.shared.changeIncline(by: -Limits.inclineStep)
-        return .result(dialog: IntentDialog(stringLiteral: line))
+    func perform() async throws -> some IntentResult {
+        try await runAndSpeak { try await Treadmill.shared.changeIncline(by: -Limits.inclineStep) }
+        return .result()
     }
 }
 
-/// The one that pays for itself: "zeven" instead of twelve times "sneller".
+/// De reden dat we hieraan begonnen: "zeven" in plaats van twaalf keer "sneller".
 struct SetSpeedIntent: AppIntent {
     static var title: LocalizedStringResource = "Snelheid instellen"
     static var openAppWhenRun = false
     static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
-    // inclusiveRange must come before requestValueDialog, and needs literals.
+    // inclusiveRange moet vóór requestValueDialog staan, met letterlijke waarden.
     @Parameter(title: "Snelheid in km/h",
                inclusiveRange: (1.0, 22.0),
                requestValueDialog: IntentDialog("Welke snelheid?"))
@@ -86,9 +96,9 @@ struct SetSpeedIntent: AppIntent {
         Summary("Zet de loopband op \(\.$speed) kilometer per uur")
     }
 
-    func perform() async throws -> some IntentResult & ProvidesDialog {
-        let line = try await Treadmill.shared.setSpeed(speed)
-        return .result(dialog: IntentDialog(stringLiteral: line))
+    func perform() async throws -> some IntentResult {
+        try await runAndSpeak { try await Treadmill.shared.setSpeed(speed) }
+        return .result()
     }
 }
 
@@ -106,9 +116,9 @@ struct SetInclineIntent: AppIntent {
         Summary("Zet de helling op \(\.$incline) procent")
     }
 
-    func perform() async throws -> some IntentResult & ProvidesDialog {
-        let line = try await Treadmill.shared.setIncline(incline)
-        return .result(dialog: IntentDialog(stringLiteral: line))
+    func perform() async throws -> some IntentResult {
+        try await runAndSpeak { try await Treadmill.shared.setIncline(incline) }
+        return .result()
     }
 }
 
@@ -117,21 +127,15 @@ struct TreadmillStatusIntent: AppIntent {
     static var openAppWhenRun = false
     static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
-    func perform() async throws -> some IntentResult & ProvidesDialog {
-        let line = try await Treadmill.shared.statusSentence()
-        return .result(dialog: IntentDialog(stringLiteral: line))
+    func perform() async throws -> some IntentResult {
+        try await runAndSpeak { try await Treadmill.shared.statusSentence() }
+        return .result()
     }
 }
 
-/// Ready-made Siri phrases, available without any user setup.
-/// Apple scopes the com.apple.developer.siri entitlement to Intents app
-/// extensions handling Siri requests *other than shortcut requests* — this app
-/// has no extension and these are shortcut requests, so it should not apply.
-/// If Siri ignores the phrases anyway, make your own shortcut instead and give
-/// it whatever name you like; that route never needs an entitlement.
-/// Note that Apple requires the app name inside each phrase.
+/// Kant-en-klare Siri-zinnen. Apple vereist de app-naam in elke zin.
 struct LoopbandShortcuts: AppShortcutsProvider {
-    // Without @AppShortcutsBuilder, Siri only ever recognises the FIRST entry.
+    // Zonder @AppShortcutsBuilder herkent Siri alleen de EERSTE zin.
     @AppShortcutsBuilder
     static var appShortcuts: [AppShortcut] {
         AppShortcut(intent: FasterIntent(),

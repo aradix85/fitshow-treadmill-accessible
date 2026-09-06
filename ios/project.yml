@@ -29,6 +29,7 @@ targets:
         UILaunchScreen: {}
         UIBackgroundModes:
           - bluetooth-central
+          - audio
         NSBluetoothAlwaysUsageDescription: >-
           Om rechtstreeks verbinding te maken met je loopband.
         UISupportedInterfaceOrientations:

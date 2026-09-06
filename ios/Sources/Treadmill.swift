@@ -34,6 +34,7 @@ final class Treadmill: NSObject, ObservableObject, @unchecked Sendable {
     private var controlPoint: CBCharacteristic?
     private var hasControl = false
     private var wantsConnection = false
+    fileprivate var hasAdoptedIncline = false
 
     private var writeQueue: [[UInt8]] = []
     private var isWriting = false
@@ -305,6 +306,12 @@ extension Treadmill {
             let raw = take(2) ?? 0
             incline = Double(signed16(raw)) / 10
             _ = take(2)                                             // ramp angle
+            // The belt keeps its incline when powered off, so trust the machine
+            // over our own zero on the first reading after connecting.
+            if !hasAdoptedIncline {
+                targetIncline = incline
+                hasAdoptedIncline = true
+            }
         }
         if has(4) { _ = take(4) }                                   // pos/neg elevation
         if has(5) { _ = take(1) }                                   // pace
