@@ -71,7 +71,20 @@ struct BigButton: View {
     }
 }
 
-/// Announcements are how VoiceOver users hear the result of a button press.
+/// Announcements posted at the default priority are dropped whenever VoiceOver
+/// is already talking — and right after a button press it always is, because it
+/// is still reading the button's own label. High priority interrupts instead.
+/// With VoiceOver off there is nobody to announce to, so we speak it ourselves.
 func announce(_ message: String) {
-    UIAccessibility.post(notification: .announcement, argument: message)
+    guard UIAccessibility.isVoiceOverRunning else {
+        Task { await Speaker.shared.say(message) }
+        return
+    }
+    let attributed = AttributedString(
+        message,
+        attributes: AttributeContainer([
+            .accessibilitySpeechAnnouncementPriority: UIAccessibilityPriority.high
+        ])
+    )
+    AccessibilityNotification.Announcement(attributed).post()
 }
