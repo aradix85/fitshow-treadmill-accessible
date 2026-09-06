@@ -47,8 +47,8 @@ struct ContentView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("\(treadmill.statusText). \(spokenValues)")
-        .accessibilityHint("Dubbeltik om het opnieuw te horen.")
+        .accessibilityLabel(dutch("\(treadmill.statusText). \(spokenValues)"))
+        .accessibilityHint(dutch("Dubbeltik om het opnieuw te horen."))
     }
 }
 
@@ -84,17 +84,24 @@ struct BigButton: View {
 /// Announcements posted at the default priority are dropped whenever VoiceOver
 /// is already talking — and right after a button press it always is, because it
 /// is still reading the button's own label. High priority interrupts instead.
+/// The language is spelled out too, so VoiceOver never falls back to an English
+/// voice for Dutch text.
 /// With VoiceOver off there is nobody to announce to, so we speak it ourselves.
 func announce(_ message: String) {
     guard UIAccessibility.isVoiceOverRunning else {
         Task { await Speaker.shared.say(message) }
         return
     }
-    let attributed = AttributedString(
-        message,
-        attributes: AttributeContainer([
-            .accessibilitySpeechAnnouncementPriority: UIAccessibilityPriority.high
-        ])
-    )
+    let attributed = AttributedString(message, attributes: AttributeContainer([
+        .accessibilitySpeechAnnouncementPriority: UIAccessibilityPriority.high,
+        .accessibilitySpeechLanguage: "nl-NL"
+    ]))
     AccessibilityNotification.Announcement(attributed).post()
+}
+
+/// Tags a label as Dutch so VoiceOver reads it with a Dutch voice.
+func dutch(_ text: String) -> Text {
+    Text(AttributedString(text, attributes: AttributeContainer([
+        .accessibilitySpeechLanguage: "nl-NL"
+    ])))
 }

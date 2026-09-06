@@ -26,6 +26,11 @@ targets:
       path: Sources/Info.plist
       properties:
         CFBundleDisplayName: Loopband
+        # Without this iOS assumes the app is English and VoiceOver reads the
+        # labels with an English voice, even though every string is Dutch.
+        CFBundleDevelopmentRegion: nl
+        CFBundleLocalizations:
+          - nl
         UILaunchScreen: {}
         UIBackgroundModes:
           - bluetooth-central
