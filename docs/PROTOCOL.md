@@ -100,12 +100,62 @@ This matters: a parser that reads bytes 2-3 as speed without checking bit 0
 will read `00 00` and conclude the treadmill is standing still, half the time.
 Always test bit 0 before reading the speed.
 
-## Other channels present (not needed)
+## The vendor channel `fff0` — FitShow's UART bridge (decoded)
 
-The treadmill also exposes a vendor service `fff0` with characteristic `fff1`
-(notify) that sends its own parallel summary. For full control + reading this is
-**not needed** — the standard FTMS channel already provides everything. There are
-also standard info channels (device name, manufacturer) and a heart-rate service.
+Service `fff0` with notify `fff1` and write `fff2` is the stock configuration of
+Feasycom-style BLE modules: a **transparent UART bridge**. Whatever the treadmill's
+control board puts on its serial line comes out on `fff1`. This is FitShow's own
+protocol, and it is not needed for control — FTMS already gives you everything.
+Documented here because it appears to be undocumented anywhere else.
+
+### Frame format
+
+```
+02 <type> <payload...> <checksum> 03
+```
+
+`02` is STX, `03` is ETX, and the checksum is a plain **XOR of every byte
+between them** (type byte included, checksum excluded). Verified against dozens
+of captured frames.
+
+### Status frames (`type = 0x51`)
+
+```
+02 51 <state> <speed> <incline> <time:2> <distance:2> <energy:2> <?:2> <?:2> <ck> 03
+```
+
+| Field    | Size | Meaning |
+|----------|------|---------|
+| state    | 1    | `00` idle, `02` counting down, `03` running, `04` cooling down |
+| speed    | 1    | km/h x10, so `1e` = 3.0 km/h |
+| incline  | 1    | percent, so `05` = 5% |
+| time     | 2 LE | seconds |
+| distance | 2 LE | metres |
+| energy   | 2 LE | kcal **x10**, so `42 00` = 6.6 kcal (FTMS rounds this to 6) |
+| ?        | 2 LE | see below |
+| ?        | 2 LE | always zero in every capture |
+
+While idle the frame collapses to `02 51 00 51 03`. During the countdown before
+the belt engages it is `02 51 02 <n> ...` with `n` running 3, 2, 1 — that is the
+treadmill's own start countdown.
+
+### Command echoes (`type = 0x53`)
+
+Sent when a setting changes: `02 53 02 <speed> <incline> <ck> 03` for a new speed
+or incline, and `02 53 03 <ck> 03` on stop.
+
+### The unidentified field
+
+The 2-byte field after energy carries the same value as the three payload bytes
+of the odd 5-byte FTMS packet (flags `0x2001`) — the two channels agree, so it is
+one real quantity, not noise.
+
+Measured behaviour: zero while idle and for the first seconds of running, then it
+climbs 1, 3, 4 over about three seconds and **freezes at 4 for the rest of the
+session**, returning to 0 on stop. It does not respond to speed (tested at 3, 5
+and 7 km/h), incline, distance, time or energy. That rules out every obvious
+physical quantity. Most likely a state or mode indicator that settles once the
+belt is up to speed, but this is not confirmed.
 
 ## Status messages
 

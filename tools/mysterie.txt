@@ -1,0 +1,274 @@
+[16:46:06] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:46:06] FFF1  02 51 06 02 55 03
+[16:46:07] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:46:07] FFF1  02 51 06 02 55 03
+
+>>> reset
+
+>>> start
+[16:46:08] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:46:08] FFF1  02 51 06 02 55 03
+[16:46:08] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:46:08] STATUS opwarmen
+[16:46:08] FFF1  02 51 02 03 50 03
+[16:46:09] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:46:09] FFF1  02 51 02 03 50 03
+[16:46:10] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:46:10] FFF1  02 51 02 02 51 03
+[16:46:11] FFF1  02 51 02 01 52 03
+[16:46:11] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:46:12] STATUS loopt
+[16:46:12] MYSTERIE   0   0   0   | ftms-snelheid  0.80  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:46:12] FFF1  02 51 03 08 00 00 00 00 00 00 00 00 00 00 00 5a 03
+[16:46:13] MYSTERIE   0   0   0   | ftms-snelheid  0.80  helling  0.0  afstand    0  tijd    1  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:46:13] FFF1  02 51 03 08 00 01 00 00 00 00 00 00 00 00 00 5b 03
+[16:46:14] FFF1  02 51 03 08 00 02 00 00 00 00 00 00 00 00 00 58 03
+[16:46:14] MYSTERIE   0   0   0   | ftms-snelheid  0.80  helling  0.0  afstand    0  tijd    2  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+
+>>> snelheid 5.0 km/h
+[16:46:15] FFF1  02 53 02 32 00 63 03
+[16:46:15] FFF1  02 51 03 32 00 03 00 00 00 00 00 00 00 00 00 63 03
+[16:46:15] MYSTERIE   0   0   0   | ftms-snelheid  5.00  helling  0.0  afstand    0  tijd    3  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:46:16] MYSTERIE   0   0   0   | ftms-snelheid  5.00  helling  0.0  afstand    1  tijd    4  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:46:16] FFF1  02 51 03 32 00 04 00 01 00 00 00 00 00 00 00 65 03
+[16:46:17] MYSTERIE   0   0   0   | ftms-snelheid  5.00  helling  0.0  afstand    1  tijd    5  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:46:17] FFF1  02 51 03 32 00 05 00 01 00 00 00 00 00 00 00 64 03
+[16:46:18] MYSTERIE   1   0   0   | ftms-snelheid  5.00  helling  0.0  afstand    2  tijd    6  kcal   0  | x als mph->km/h  1.61  x/2  0.5
+[16:46:18] FFF1  02 51 03 32 00 06 00 02 00 01 00 01 00 00 00 64 03
+[16:46:19] MYSTERIE   3   0   0   | ftms-snelheid  5.00  helling  0.0  afstand    4  tijd    7  kcal   0  | x als mph->km/h  4.83  x/2  1.5
+[16:46:19] FFF1  02 51 03 32 00 07 00 04 00 02 00 03 00 00 00 62 03
+[16:46:20] FFF1  02 51 03 32 00 08 00 05 00 03 00 04 00 00 00 6a 03
+[16:46:20] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand    5  tijd    8  kcal   0  | x als mph->km/h  6.44  x/2  2.0
+[16:46:21] FFF1  02 51 03 32 00 09 00 07 00 04 00 04 00 00 00 6e 03
+[16:46:21] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand    7  tijd    9  kcal   0  | x als mph->km/h  6.44  x/2  2.0
+[16:46:22] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand    8  tijd   10  kcal   0  | x als mph->km/h  6.44  x/2  2.0
+[16:46:22] FFF1  02 51 03 32 00 0a 00 08 00 05 00 04 00 00 00 63 03
+[16:46:23] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand    9  tijd   11  kcal   0  | x als mph->km/h  6.44  x/2  2.0
+[16:46:23] FFF1  02 51 03 32 00 0b 00 09 00 06 00 04 00 00 00 60 03
+[16:46:24] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand   11  tijd   12  kcal   0  | x als mph->km/h  6.44  x/2  2.0
+[16:46:24] FFF1  02 51 03 32 00 0c 00 0b 00 07 00 04 00 00 00 64 03
+[16:46:25] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand   12  tijd   13  kcal   0  | x als mph->km/h  6.44  x/2  2.0
+[16:46:25] FFF1  02 51 03 32 00 0d 00 0c 00 08 00 04 00 00 00 6d 03
+[16:46:26] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand   13  tijd   14  kcal   0  | x als mph->km/h  6.44  x/2  2.0
+[16:46:26] FFF1  02 51 03 32 00 0e 00 0d 00 09 00 04 00 00 00 6e 03
+[16:46:27] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand   15  tijd   15  kcal   1  | x als mph->km/h  6.44  x/2  2.0
+[16:46:27] FFF1  02 51 03 32 00 0f 00 0f 00 0a 00 04 00 00 00 6e 03
+[16:46:28] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand   16  tijd   16  kcal   1  | x als mph->km/h  6.44  x/2  2.0
+[16:46:28] FFF1  02 51 03 32 00 10 00 10 00 0b 00 04 00 00 00 6f 03
+[16:46:29] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand   18  tijd   17  kcal   1  | x als mph->km/h  6.44  x/2  2.0
+[16:46:29] FFF1  02 51 03 32 00 11 00 12 00 0c 00 04 00 00 00 6b 03
+[16:46:30] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand   19  tijd   18  kcal   1  | x als mph->km/h  6.44  x/2  2.0
+[16:46:30] FFF1  02 51 03 32 00 12 00 13 00 0d 00 04 00 00 00 68 03
+[16:46:31] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand   20  tijd   19  kcal   1  | x als mph->km/h  6.44  x/2  2.0
+[16:46:31] FFF1  02 51 03 32 00 13 00 14 00 0e 00 04 00 00 00 6d 03
+[16:46:32] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand   22  tijd   20  kcal   1  | x als mph->km/h  6.44  x/2  2.0
+[16:46:32] FFF1  02 51 03 32 00 14 00 16 00 0f 00 04 00 00 00 69 03
+[16:46:33] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand   23  tijd   21  kcal   1  | x als mph->km/h  6.44  x/2  2.0
+[16:46:33] FFF1  02 51 03 32 00 15 00 17 00 10 00 04 00 00 00 76 03
+[16:46:34] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand   24  tijd   22  kcal   1  | x als mph->km/h  6.44  x/2  2.0
+[16:46:34] FFF1  02 51 03 32 00 16 00 18 00 10 00 04 00 00 00 7a 03
+[16:46:35] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand   26  tijd   23  kcal   1  | x als mph->km/h  6.44  x/2  2.0
+[16:46:35] FFF1  02 51 03 32 00 17 00 1a 00 12 00 04 00 00 00 7b 03
+[16:46:36] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand   27  tijd   24  kcal   1  | x als mph->km/h  6.44  x/2  2.0
+[16:46:36] FFF1  02 51 03 32 00 18 00 1b 00 12 00 04 00 00 00 75 03
+
+>>> snelheid 7.0 km/h
+[16:46:37] MYSTERIE   4   0   0   | ftms-snelheid  5.00  helling  0.0  afstand   29  tijd   25  kcal   2  | x als mph->km/h  6.44  x/2  2.0
+[16:46:37] FFF1  02 51 03 32 00 19 00 1d 00 14 00 04 00 00 00 74 03
+[16:46:37] FFF1  02 53 02 46 00 17 03
+[16:46:38] FFF1  02 51 03 46 00 1a 00 1e 00 15 00 04 00 00 00 01 03
+[16:46:38] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   30  tijd   26  kcal   2  | x als mph->km/h  6.44  x/2  2.0
+[16:46:39] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   32  tijd   27  kcal   2  | x als mph->km/h  6.44  x/2  2.0
+[16:46:39] FFF1  02 51 03 46 00 1b 00 20 00 16 00 04 00 00 00 3d 03
+[16:46:40] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   34  tijd   28  kcal   2  | x als mph->km/h  6.44  x/2  2.0
+[16:46:40] FFF1  02 51 03 46 00 1c 00 22 00 17 00 04 00 00 00 39 03
+[16:46:41] FFF1  02 51 03 46 00 1d 00 24 00 19 00 04 00 00 00 30 03
+[16:46:41] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   36  tijd   29  kcal   2  | x als mph->km/h  6.44  x/2  2.0
+[16:46:42] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   38  tijd   30  kcal   2  | x als mph->km/h  6.44  x/2  2.0
+[16:46:42] FFF1  02 51 03 46 00 1e 00 26 00 1a 00 04 00 00 00 32 03
+[16:46:43] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   40  tijd   31  kcal   2  | x als mph->km/h  6.44  x/2  2.0
+[16:46:43] FFF1  02 51 03 46 00 1f 00 28 00 1c 00 04 00 00 00 3b 03
+[16:46:44] FFF1  02 51 03 46 00 20 00 2a 00 1d 00 04 00 00 00 07 03
+[16:46:44] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   42  tijd   32  kcal   2  | x als mph->km/h  6.44  x/2  2.0
+[16:46:45] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   43  tijd   33  kcal   3  | x als mph->km/h  6.44  x/2  2.0
+[16:46:45] FFF1  02 51 03 46 00 21 00 2b 00 1e 00 04 00 00 00 04 03
+[16:46:46] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   45  tijd   34  kcal   3  | x als mph->km/h  6.44  x/2  2.0
+[16:46:46] FFF1  02 51 03 46 00 22 00 2d 00 1f 00 04 00 00 00 00 03
+[16:46:47] FFF1  02 51 03 46 00 23 00 2f 00 21 00 04 00 00 00 3d 03
+[16:46:47] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   47  tijd   35  kcal   3  | x als mph->km/h  6.44  x/2  2.0
+[16:46:48] FFF1  02 51 03 46 00 24 00 31 00 22 00 04 00 00 00 27 03
+[16:46:48] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   49  tijd   36  kcal   3  | x als mph->km/h  6.44  x/2  2.0
+[16:46:49] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   51  tijd   37  kcal   3  | x als mph->km/h  6.44  x/2  2.0
+[16:46:49] FFF1  02 51 03 46 00 25 00 33 00 23 00 04 00 00 00 25 03
+[16:46:50] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   53  tijd   38  kcal   3  | x als mph->km/h  6.44  x/2  2.0
+[16:46:50] FFF1  02 51 03 46 00 26 00 35 00 25 00 04 00 00 00 26 03
+[16:46:51] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   55  tijd   39  kcal   3  | x als mph->km/h  6.44  x/2  2.0
+[16:46:51] FFF1  02 51 03 46 00 27 00 37 00 26 00 04 00 00 00 26 03
+[16:46:52] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   57  tijd   40  kcal   4  | x als mph->km/h  6.44  x/2  2.0
+[16:46:52] FFF1  02 51 03 46 00 28 00 39 00 28 00 04 00 00 00 29 03
+[16:46:53] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   59  tijd   41  kcal   4  | x als mph->km/h  6.44  x/2  2.0
+[16:46:53] FFF1  02 51 03 46 00 29 00 3b 00 29 00 04 00 00 00 2b 03
+[16:46:54] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   61  tijd   42  kcal   4  | x als mph->km/h  6.44  x/2  2.0
+[16:46:54] FFF1  02 51 03 46 00 2a 00 3d 00 2a 00 04 00 00 00 2d 03
+[16:46:55] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   63  tijd   43  kcal   4  | x als mph->km/h  6.44  x/2  2.0
+[16:46:55] FFF1  02 51 03 46 00 2b 00 3f 00 2c 00 04 00 00 00 28 03
+[16:46:56] FFF1  02 51 03 46 00 2c 00 41 00 2d 00 04 00 00 00 50 03
+[16:46:56] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   65  tijd   44  kcal   4  | x als mph->km/h  6.44  x/2  2.0
+[16:46:57] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   67  tijd   45  kcal   4  | x als mph->km/h  6.44  x/2  2.0
+[16:46:57] FFF1  02 51 03 46 00 2d 00 43 00 2f 00 04 00 00 00 51 03
+[16:46:58] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   69  tijd   46  kcal   4  | x als mph->km/h  6.44  x/2  2.0
+[16:46:58] FFF1  02 51 03 46 00 2e 00 45 00 30 00 04 00 00 00 4b 03
+[16:46:59] FFF1  02 51 03 46 00 2f 00 47 00 31 00 04 00 00 00 49 03
+[16:46:59] MYSTERIE   4   0   0   | ftms-snelheid  7.00  helling  0.0  afstand   71  tijd   47  kcal   4  | x als mph->km/h  6.44  x/2  2.0
+
+>>> snelheid 3.0 km/h
+[16:47:00] FFF1  02 53 02 1e 00 4f 03
+[16:47:00] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   73  tijd   48  kcal   5  | x als mph->km/h  6.44  x/2  2.0
+[16:47:00] FFF1  02 51 03 1e 00 30 00 49 00 33 00 04 00 00 00 02 03
+[16:47:01] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   74  tijd   49  kcal   5  | x als mph->km/h  6.44  x/2  2.0
+[16:47:01] FFF1  02 51 03 1e 00 31 00 4a 00 34 00 04 00 00 00 07 03
+[16:47:02] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   76  tijd   50  kcal   5  | x als mph->km/h  6.44  x/2  2.0
+[16:47:02] FFF1  02 51 03 1e 00 32 00 4c 00 35 00 04 00 00 00 03 03
+[16:47:03] FFF1  02 51 03 1e 00 33 00 4d 00 36 00 04 00 00 00 00 03
+[16:47:03] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   77  tijd   51  kcal   5  | x als mph->km/h  6.44  x/2  2.0
+[16:47:04] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   78  tijd   52  kcal   5  | x als mph->km/h  6.44  x/2  2.0
+[16:47:04] FFF1  02 51 03 1e 00 34 00 4e 00 36 00 04 00 00 00 04 03
+[16:47:05] FFF1  02 51 03 1e 00 35 00 4f 00 37 00 04 00 00 00 05 03
+[16:47:05] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   79  tijd   53  kcal   5  | x als mph->km/h  6.44  x/2  2.0
+[16:47:06] FFF1  02 51 03 1e 00 36 00 4f 00 37 00 04 00 00 00 06 03
+[16:47:06] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   79  tijd   54  kcal   5  | x als mph->km/h  6.44  x/2  2.0
+[16:47:07] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   80  tijd   55  kcal   5  | x als mph->km/h  6.44  x/2  2.0
+[16:47:07] FFF1  02 51 03 1e 00 37 00 50 00 38 00 04 00 00 00 17 03
+[16:47:08] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   81  tijd   56  kcal   5  | x als mph->km/h  6.44  x/2  2.0
+[16:47:08] FFF1  02 51 03 1e 00 38 00 51 00 38 00 04 00 00 00 19 03
+[16:47:09] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   82  tijd   57  kcal   5  | x als mph->km/h  6.44  x/2  2.0
+[16:47:09] FFF1  02 51 03 1e 00 39 00 52 00 39 00 04 00 00 00 1a 03
+[16:47:10] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   83  tijd   58  kcal   5  | x als mph->km/h  6.44  x/2  2.0
+[16:47:10] FFF1  02 51 03 1e 00 3a 00 53 00 3a 00 04 00 00 00 1b 03
+[16:47:11] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   84  tijd   59  kcal   5  | x als mph->km/h  6.44  x/2  2.0
+[16:47:11] FFF1  02 51 03 1e 00 3b 00 54 00 3b 00 04 00 00 00 1c 03
+[16:47:12] FFF1  02 51 03 1e 00 3c 00 54 00 3b 00 04 00 00 00 1b 03
+[16:47:12] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   84  tijd   60  kcal   5  | x als mph->km/h  6.44  x/2  2.0
+[16:47:13] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   85  tijd   61  kcal   5  | x als mph->km/h  6.44  x/2  2.0
+[16:47:13] FFF1  02 51 03 1e 00 3d 00 55 00 3b 00 04 00 00 00 1b 03
+[16:47:14] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   86  tijd   62  kcal   6  | x als mph->km/h  6.44  x/2  2.0
+[16:47:14] FFF1  02 51 03 1e 00 3e 00 56 00 3c 00 04 00 00 00 1c 03
+[16:47:15] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   87  tijd   63  kcal   6  | x als mph->km/h  6.44  x/2  2.0
+[16:47:15] FFF1  02 51 03 1e 00 3f 00 57 00 3d 00 04 00 00 00 1d 03
+[16:47:16] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   88  tijd   64  kcal   6  | x als mph->km/h  6.44  x/2  2.0
+[16:47:16] FFF1  02 51 03 1e 00 40 00 58 00 3d 00 04 00 00 00 6d 03
+[16:47:17] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   89  tijd   65  kcal   6  | x als mph->km/h  6.44  x/2  2.0
+[16:47:17] FFF1  02 51 03 1e 00 41 00 59 00 3e 00 04 00 00 00 6e 03
+[16:47:18] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   89  tijd   66  kcal   6  | x als mph->km/h  6.44  x/2  2.0
+[16:47:18] FFF1  02 51 03 1e 00 42 00 59 00 3e 00 04 00 00 00 6d 03
+[16:47:19] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   90  tijd   67  kcal   6  | x als mph->km/h  6.44  x/2  2.0
+[16:47:19] FFF1  02 51 03 1e 00 43 00 5a 00 3f 00 04 00 00 00 6e 03
+[16:47:20] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   91  tijd   68  kcal   6  | x als mph->km/h  6.44  x/2  2.0
+[16:47:20] FFF1  02 51 03 1e 00 44 00 5b 00 3f 00 04 00 00 00 68 03
+[16:47:21] FFF1  02 51 03 1e 00 45 00 5c 00 40 00 04 00 00 00 11 03
+[16:47:21] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   92  tijd   69  kcal   6  | x als mph->km/h  6.44  x/2  2.0
+
+>>> helling 5%
+[16:47:22] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand   93  tijd   70  kcal   6  | x als mph->km/h  6.44  x/2  2.0
+[16:47:22] FFF1  02 51 03 1e 00 46 00 5d 00 41 00 04 00 00 00 12 03
+[16:47:22] FFF1  02 53 02 1e 05 4a 03
+[16:47:23] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand   94  tijd   71  kcal   6  | x als mph->km/h  6.44  x/2  2.0
+[16:47:23] FFF1  02 51 03 1e 05 47 00 5e 00 42 00 04 00 00 00 16 03
+[16:47:24] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand   94  tijd   72  kcal   6  | x als mph->km/h  6.44  x/2  2.0
+[16:47:24] FFF1  02 51 03 1e 05 48 00 5e 00 42 00 04 00 00 00 19 03
+[16:47:25] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand   95  tijd   73  kcal   6  | x als mph->km/h  6.44  x/2  2.0
+[16:47:25] FFF1  02 51 03 1e 05 49 00 5f 00 42 00 04 00 00 00 19 03
+[16:47:26] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand   96  tijd   74  kcal   6  | x als mph->km/h  6.44  x/2  2.0
+[16:47:26] FFF1  02 51 03 1e 05 4a 00 60 00 43 00 04 00 00 00 24 03
+[16:47:27] FFF1  02 51 03 1e 05 4b 00 61 00 44 00 04 00 00 00 23 03
+[16:47:27] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand   97  tijd   75  kcal   6  | x als mph->km/h  6.44  x/2  2.0
+[16:47:28] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand   98  tijd   76  kcal   6  | x als mph->km/h  6.44  x/2  2.0
+[16:47:28] FFF1  02 51 03 1e 05 4c 00 62 00 45 00 04 00 00 00 26 03
+[16:47:29] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand   99  tijd   77  kcal   6  | x als mph->km/h  6.44  x/2  2.0
+[16:47:29] FFF1  02 51 03 1e 05 4d 00 63 00 45 00 04 00 00 00 26 03
+[16:47:30] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand   99  tijd   78  kcal   6  | x als mph->km/h  6.44  x/2  2.0
+[16:47:30] FFF1  02 51 03 1e 05 4e 00 63 00 45 00 04 00 00 00 25 03
+[16:47:31] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand  100  tijd   79  kcal   7  | x als mph->km/h  6.44  x/2  2.0
+[16:47:31] FFF1  02 51 03 1e 05 4f 00 64 00 46 00 04 00 00 00 20 03
+[16:47:32] FFF1  02 51 03 1e 05 50 00 65 00 47 00 04 00 00 00 3f 03
+[16:47:32] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand  101  tijd   80  kcal   7  | x als mph->km/h  6.44  x/2  2.0
+[16:47:33] FFF1  02 51 03 1e 05 51 00 66 00 48 00 04 00 00 00 32 03
+[16:47:33] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand  102  tijd   81  kcal   7  | x als mph->km/h  6.44  x/2  2.0
+[16:47:34] FFF1  02 51 03 1e 05 52 00 67 00 48 00 04 00 00 00 30 03
+[16:47:34] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand  103  tijd   82  kcal   7  | x als mph->km/h  6.44  x/2  2.0
+[16:47:35] FFF1  02 51 03 1e 05 53 00 68 00 49 00 04 00 00 00 3f 03
+[16:47:35] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand  104  tijd   83  kcal   7  | x als mph->km/h  6.44  x/2  2.0
+[16:47:36] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand  104  tijd   84  kcal   7  | x als mph->km/h  6.44  x/2  2.0
+[16:47:36] FFF1  02 51 03 1e 05 54 00 68 00 49 00 04 00 00 00 38 03
+[16:47:37] FFF1  02 51 03 1e 05 55 00 69 00 4a 00 04 00 00 00 3b 03
+[16:47:37] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand  105  tijd   85  kcal   7  | x als mph->km/h  6.44  x/2  2.0
+[16:47:38] FFF1  02 51 03 1e 05 56 00 6a 00 4a 00 04 00 00 00 3b 03
+[16:47:38] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand  106  tijd   86  kcal   7  | x als mph->km/h  6.44  x/2  2.0
+[16:47:39] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand  107  tijd   87  kcal   7  | x als mph->km/h  6.44  x/2  2.0
+[16:47:39] FFF1  02 51 03 1e 05 57 00 6b 00 4b 00 04 00 00 00 3a 03
+[16:47:40] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  5.0  afstand  108  tijd   88  kcal   7  | x als mph->km/h  6.44  x/2  2.0
+[16:47:40] FFF1  02 51 03 1e 05 58 00 6c 00 4c 00 04 00 00 00 35 03
+
+>>> helling 0%
+[16:47:41] FFF1  02 53 02 1e 00 4f 03
+[16:47:41] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand  109  tijd   89  kcal   7  | x als mph->km/h  6.44  x/2  2.0
+[16:47:41] FFF1  02 51 03 1e 00 59 00 6d 00 4d 00 04 00 00 00 31 03
+[16:47:42] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand  109  tijd   90  kcal   7  | x als mph->km/h  6.44  x/2  2.0
+[16:47:42] FFF1  02 51 03 1e 00 5a 00 6d 00 4d 00 04 00 00 00 32 03
+[16:47:43] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand  110  tijd   91  kcal   7  | x als mph->km/h  6.44  x/2  2.0
+[16:47:43] FFF1  02 51 03 1e 00 5b 00 6e 00 4d 00 04 00 00 00 30 03
+[16:47:44] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand  111  tijd   92  kcal   7  | x als mph->km/h  6.44  x/2  2.0
+[16:47:44] FFF1  02 51 03 1e 00 5c 00 6f 00 4e 00 04 00 00 00 35 03
+[16:47:45] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand  112  tijd   93  kcal   7  | x als mph->km/h  6.44  x/2  2.0
+[16:47:45] FFF1  02 51 03 1e 00 5d 00 70 00 4f 00 04 00 00 00 2a 03
+[16:47:46] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand  113  tijd   94  kcal   7  | x als mph->km/h  6.44  x/2  2.0
+[16:47:46] FFF1  02 51 03 1e 00 5e 00 71 00 4f 00 04 00 00 00 28 03
+[16:47:47] FFF1  02 51 03 1e 00 5f 00 72 00 50 00 04 00 00 00 35 03
+[16:47:47] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand  114  tijd   95  kcal   8  | x als mph->km/h  6.44  x/2  2.0
+[16:47:48] FFF1  02 51 03 1e 00 60 00 72 00 50 00 04 00 00 00 0a 03
+[16:47:48] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand  114  tijd   96  kcal   8  | x als mph->km/h  6.44  x/2  2.0
+[16:47:49] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand  115  tijd   97  kcal   8  | x als mph->km/h  6.44  x/2  2.0
+[16:47:49] FFF1  02 51 03 1e 00 61 00 73 00 51 00 04 00 00 00 0b 03
+[16:47:50] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand  116  tijd   98  kcal   8  | x als mph->km/h  6.44  x/2  2.0
+[16:47:50] FFF1  02 51 03 1e 00 62 00 74 00 52 00 04 00 00 00 0c 03
+[16:47:51] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand  117  tijd   99  kcal   8  | x als mph->km/h  6.44  x/2  2.0
+[16:47:51] FFF1  02 51 03 1e 00 63 00 75 00 52 00 04 00 00 00 0c 03
+[16:47:52] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand  118  tijd  100  kcal   8  | x als mph->km/h  6.44  x/2  2.0
+[16:47:52] FFF1  02 51 03 1e 00 64 00 76 00 53 00 04 00 00 00 09 03
+
+>>> stop
+[16:47:53] MYSTERIE   4   0   0   | ftms-snelheid  3.00  helling  0.0  afstand  119  tijd  101  kcal   8  | x als mph->km/h  6.44  x/2  2.0
+[16:47:53] FFF1  02 51 03 1e 00 65 00 77 00 54 00 04 00 00 00 0e 03
+[16:47:53] FFF1  02 53 03 50 03
+[16:47:54] STATUS afkoelen
+[16:47:54] MYSTERIE   4   0   0   | ftms-snelheid  2.10  helling  0.0  afstand  119  tijd  101  kcal   8  | x als mph->km/h  6.44  x/2  2.0
+[16:47:54] FFF1  02 51 04 15 00 65 00 77 00 54 00 04 00 00 00 02 03
+[16:47:55] MYSTERIE   4   0   0   | ftms-snelheid  1.10  helling  0.0  afstand  119  tijd  101  kcal   8  | x als mph->km/h  6.44  x/2  2.0
+[16:47:55] FFF1  02 51 04 0b 00 65 00 77 00 54 00 04 00 00 00 1c 03
+[16:47:56] MYSTERIE   4   0   0   | ftms-snelheid  0.10  helling  0.0  afstand  119  tijd  101  kcal   8  | x als mph->km/h  6.44  x/2  2.0
+[16:47:56] FFF1  02 51 04 01 00 65 00 77 00 54 00 04 00 00 00 16 03
+[16:47:57] STATUS idle
+[16:47:57] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:47:57] FFF1  02 51 00 51 03
+[16:47:58] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:47:58] FFF1  02 51 00 51 03
+[16:47:59] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:47:59] FFF1  02 51 00 51 03
+[16:48:00] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:48:00] FFF1  02 51 00 51 03
+[16:48:01] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:48:01] FFF1  02 51 00 51 03
+[16:48:02] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:48:02] FFF1  02 51 00 51 03
+[16:48:03] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:48:03] FFF1  02 51 00 51 03
+[16:48:04] FFF1  02 51 00 51 03
+[16:48:04] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:48:05] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:48:05] FFF1  02 51 00 51 03
+[16:48:06] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+[16:48:06] FFF1  02 51 00 51 03
+[16:48:07] FFF1  02 51 00 51 03
+[16:48:07] MYSTERIE   0   0   0   | ftms-snelheid  0.00  helling  0.0  afstand    0  tijd    0  kcal   0  | x als mph->km/h  0.00  x/2  0.0
+
+Klaar. Alles staat in mysterie.txt
