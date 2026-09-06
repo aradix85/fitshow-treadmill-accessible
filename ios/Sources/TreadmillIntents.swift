@@ -1,16 +1,11 @@
 import AppIntents
 
-/// Every intent speaks its own sentence via Speaker rather than returning a
-/// dialog, because dialog results are not read aloud in every invocation path.
-/// Errors still surface through Siri the normal way.
-
-/// Shared plumbing: run a treadmill command, say the result, done.
-@discardableResult
-private func runAndSpeak(_ work: () async throws -> String) async throws -> String {
-    let line = try await work()
-    await Speaker.shared.say(line)
-    return line
-}
+/// Every intent hands its sentence back to Siri as a dialog result. Siri then
+/// speaks it and, just as importantly, knows the request is finished — leaving
+/// it out made Siri sit there waiting after every command.
+///
+/// The app deliberately does NOT speak here: that would double up with Siri.
+/// Speaking in the app is only for the on-screen buttons (see ContentView).
 
 struct StartTreadmillIntent: AppIntent {
     static var title: LocalizedStringResource = "Loopband starten"
@@ -18,9 +13,8 @@ struct StartTreadmillIntent: AppIntent {
     static var openAppWhenRun = false
     static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
-    func perform() async throws -> some IntentResult {
-        try await runAndSpeak { try await Treadmill.shared.start() }
-        return .result()
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        .result(dialog: IntentDialog(stringLiteral: try await Treadmill.shared.start()))
     }
 }
 
@@ -30,9 +24,8 @@ struct StopTreadmillIntent: AppIntent {
     static var openAppWhenRun = false
     static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
-    func perform() async throws -> some IntentResult {
-        try await runAndSpeak { try await Treadmill.shared.stop() }
-        return .result()
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        .result(dialog: IntentDialog(stringLiteral: try await Treadmill.shared.stop()))
     }
 }
 
@@ -41,9 +34,9 @@ struct FasterIntent: AppIntent {
     static var openAppWhenRun = false
     static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
-    func perform() async throws -> some IntentResult {
-        try await runAndSpeak { try await Treadmill.shared.changeSpeed(by: Limits.speedStep) }
-        return .result()
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        let line = try await Treadmill.shared.changeSpeed(by: Limits.speedStep)
+        return .result(dialog: IntentDialog(stringLiteral: line))
     }
 }
 
@@ -52,9 +45,9 @@ struct SlowerIntent: AppIntent {
     static var openAppWhenRun = false
     static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
-    func perform() async throws -> some IntentResult {
-        try await runAndSpeak { try await Treadmill.shared.changeSpeed(by: -Limits.speedStep) }
-        return .result()
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        let line = try await Treadmill.shared.changeSpeed(by: -Limits.speedStep)
+        return .result(dialog: IntentDialog(stringLiteral: line))
     }
 }
 
@@ -63,9 +56,9 @@ struct SteeperIntent: AppIntent {
     static var openAppWhenRun = false
     static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
-    func perform() async throws -> some IntentResult {
-        try await runAndSpeak { try await Treadmill.shared.changeIncline(by: Limits.inclineStep) }
-        return .result()
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        let line = try await Treadmill.shared.changeIncline(by: Limits.inclineStep)
+        return .result(dialog: IntentDialog(stringLiteral: line))
     }
 }
 
@@ -74,13 +67,14 @@ struct FlatterIntent: AppIntent {
     static var openAppWhenRun = false
     static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
-    func perform() async throws -> some IntentResult {
-        try await runAndSpeak { try await Treadmill.shared.changeIncline(by: -Limits.inclineStep) }
-        return .result()
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        let line = try await Treadmill.shared.changeIncline(by: -Limits.inclineStep)
+        return .result(dialog: IntentDialog(stringLiteral: line))
     }
 }
 
 /// De reden dat we hieraan begonnen: "zeven" in plaats van twaalf keer "sneller".
+/// Maak hier een opdracht van met het veld LEEG, dan vraagt Siri om een getal.
 struct SetSpeedIntent: AppIntent {
     static var title: LocalizedStringResource = "Snelheid instellen"
     static var openAppWhenRun = false
@@ -88,7 +82,7 @@ struct SetSpeedIntent: AppIntent {
 
     // inclusiveRange moet vóór requestValueDialog staan, met letterlijke waarden.
     @Parameter(title: "Snelheid in km/h",
-               inclusiveRange: (1.0, 22.0),
+               inclusiveRange: (0.8, 22.0),
                requestValueDialog: IntentDialog("Welke snelheid?"))
     var speed: Double
 
@@ -96,9 +90,9 @@ struct SetSpeedIntent: AppIntent {
         Summary("Zet de loopband op \(\.$speed) kilometer per uur")
     }
 
-    func perform() async throws -> some IntentResult {
-        try await runAndSpeak { try await Treadmill.shared.setSpeed(speed) }
-        return .result()
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        let line = try await Treadmill.shared.setSpeed(speed)
+        return .result(dialog: IntentDialog(stringLiteral: line))
     }
 }
 
@@ -116,9 +110,9 @@ struct SetInclineIntent: AppIntent {
         Summary("Zet de helling op \(\.$incline) procent")
     }
 
-    func perform() async throws -> some IntentResult {
-        try await runAndSpeak { try await Treadmill.shared.setIncline(incline) }
-        return .result()
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        let line = try await Treadmill.shared.setIncline(incline)
+        return .result(dialog: IntentDialog(stringLiteral: line))
     }
 }
 
@@ -127,37 +121,20 @@ struct TreadmillStatusIntent: AppIntent {
     static var openAppWhenRun = false
     static var authenticationPolicy: IntentAuthenticationPolicy = .alwaysAllowed
 
-    func perform() async throws -> some IntentResult {
-        try await runAndSpeak { try await Treadmill.shared.statusSentence() }
-        return .result()
+    func perform() async throws -> some IntentResult & ProvidesDialog {
+        let line = try await Treadmill.shared.statusSentence()
+        return .result(dialog: IntentDialog(stringLiteral: line))
     }
 }
 
-/// Kant-en-klare Siri-zinnen. Apple vereist de app-naam in elke zin.
-struct LoopbandShortcuts: AppShortcutsProvider {
-    // Zonder @AppShortcutsBuilder herkent Siri alleen de EERSTE zin.
-    @AppShortcutsBuilder
-    static var appShortcuts: [AppShortcut] {
-        AppShortcut(intent: FasterIntent(),
-                    phrases: ["Sneller in \(.applicationName)"],
-                    shortTitle: "Sneller", systemImageName: "hare")
-        AppShortcut(intent: SlowerIntent(),
-                    phrases: ["Langzamer in \(.applicationName)"],
-                    shortTitle: "Langzamer", systemImageName: "tortoise")
-        AppShortcut(intent: SteeperIntent(),
-                    phrases: ["Steiler in \(.applicationName)"],
-                    shortTitle: "Steiler", systemImageName: "arrow.up.right")
-        AppShortcut(intent: FlatterIntent(),
-                    phrases: ["Vlakker in \(.applicationName)"],
-                    shortTitle: "Vlakker", systemImageName: "arrow.down.right")
-        AppShortcut(intent: StartTreadmillIntent(),
-                    phrases: ["Start \(.applicationName)"],
-                    shortTitle: "Starten", systemImageName: "play")
-        AppShortcut(intent: StopTreadmillIntent(),
-                    phrases: ["Stop \(.applicationName)"],
-                    shortTitle: "Stoppen", systemImageName: "stop")
-        AppShortcut(intent: TreadmillStatusIntent(),
-                    phrases: ["Status van \(.applicationName)"],
-                    shortTitle: "Status", systemImageName: "info.circle")
-    }
-}
+// Er is bewust GEEN AppShortcutsProvider meer.
+//
+// Apple eist dat zo'n kant-en-klare zin de app-naam bevat ("stoppen in
+// Loopband"), en juist de woorden die je nodig hebt — starten, stoppen,
+// steiler — zijn bij Siri al bezet door ingebouwde functies. Die zinnen kwamen
+// dus nooit bij deze app uit.
+//
+// Een opdracht die je zelf in de Opdrachten-app maakt heeft dat probleem niet:
+// je kiest de naam, en Siri roept hem daarmee aan. Dus alleen "Bandje uit" in
+// plaats van "stoppen in Loopband". De acties hieronder verschijnen gewoon in
+// de actielijst van de Opdrachten-app, ook zonder provider.
