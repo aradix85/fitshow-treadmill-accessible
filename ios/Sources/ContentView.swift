@@ -43,12 +43,11 @@ struct ContentView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(treadmill.statusText).font(.headline)
                 Text(spokenValues).font(.title3)
-                Text(treadmill.diagnostics).font(.footnote)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("\(treadmill.statusText). \(spokenValues). \(treadmill.diagnostics)")
+        .accessibilityLabel("\(treadmill.statusText). \(spokenValues)")
         .accessibilityHint("Dubbeltik om het opnieuw te horen.")
     }
 }

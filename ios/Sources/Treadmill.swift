@@ -22,11 +22,6 @@ final class Treadmill: NSObject, ObservableObject, @unchecked Sendable {
     @Published private(set) var elapsedS = 0
     @Published private(set) var kcal = 0
 
-    /// Raw view of the last 2ACD packet, so parsing problems are visible on
-    /// screen instead of having to be guessed at.
-    @Published private(set) var diagnostics = "Nog geen meetgegevens ontvangen."
-    private var packetCount = 0
-
     // MARK: - What we asked for (the belt follows with a delay)
 
     private(set) var targetSpeed = Limits.speedStart
@@ -50,9 +45,6 @@ final class Treadmill: NSObject, ObservableObject, @unchecked Sendable {
     /// One list of callbacks per opcode, resolved when the treadmill sends its
     /// `80 <opcode> <result>` indication back.
     fileprivate var ackWaiters: [UInt8: [(Error?) -> Void]] = [:]
-
-    /// Resolved when Training Status first reports that the belt is moving.
-    fileprivate var runningWaiters: [() -> Void] = []
 
     private static let savedIDKey = "treadmill.peripheral.identifier"
 
@@ -261,16 +253,7 @@ extension Treadmill: CBPeripheralDelegate {
         case FTMS.controlPoint:  handleControlResponse([UInt8](data))
         case FTMS.treadmillData: parseTreadmillData([UInt8](data))
         case FTMS.trainingStatus:
-            if data.count >= 2 {
-                isRunning = (data[1] == 0x0D || data[1] == 0x0E)
-                // 0x0D means the belt is genuinely moving; only then does a
-                // speed command stick (see start()).
-                if data[1] == 0x0D {
-                    let pending = runningWaiters
-                    runningWaiters.removeAll()
-                    pending.forEach { $0() }
-                }
-            }
+            if data.count >= 2 { isRunning = (data[1] == 0x0D || data[1] == 0x0E) }
         case FTMS.machineStatus:
             if let first = data.first, first == 0x02 { isRunning = false }
         default: break
@@ -342,12 +325,6 @@ extension Treadmill {
         if has(8) { _ = take(1) }                                   // heart rate
         if has(9) { _ = take(1) }                                   // metabolic equivalent
         if has(10), let v = take(2) { elapsedS = v }
-
-        packetCount += 1
-        let hex = b.map { String(format: "%02x", $0) }.joined(separator: " ")
-        diagnostics = "Pakket \(packetCount): \(b.count) bytes, "
-            + "vlaggen 0x\(String(format: "%04X", flags)), "
-            + "\(i) gelezen. Ruw: \(hex)"
     }
 }
 
@@ -404,36 +381,16 @@ extension Treadmill {
     // only updated after the treadmill confirms, so a rejected command never
     // leaves us with a wrong idea of where the belt is.
 
-    /// Starting is a three-step affair on this module. A speed sent before or
-    /// during the warm-up phase is thrown away the moment the belt engages: the
-    /// treadmill always drops to its own 0.8 km/h. Measured on the machine, so
-    /// we wait for the running state and only then set the speed we want.
+    /// The treadmill always starts at its own 0.8 km/h and discards any speed
+    /// you set beforehand. That is fine: we report what it actually does and
+    /// you adjust from there.
     @discardableResult
     func start() async throws -> String {
         try await ensureReady()
         try await send([FTMS.opReset])
         try await send([FTMS.opStart])
-        await waitUntilRunning()
-        try await send([FTMS.opSetSpeed] + Self.le16(Int((Limits.speedStart * 100).rounded())))
         targetSpeed = Limits.speedStart
-        return "Gestart op \(spoken(Limits.speedStart, decimals: 0)) kilometer per uur."
-    }
-
-    /// Waits for Training Status to report that the belt is actually moving.
-    private func waitUntilRunning(timeout: TimeInterval = 9) async {
-        await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
-            DispatchQueue.main.async {
-                if self.isRunning { cont.resume(); return }
-                var settled = false
-                let settle = {
-                    guard !settled else { return }
-                    settled = true
-                    cont.resume()
-                }
-                self.runningWaiters.append(settle)
-                DispatchQueue.main.asyncAfter(deadline: .now() + timeout) { settle() }
-            }
-        }
+        return "Gestart op \(spoken(Limits.speedStart)) kilometer per uur."
     }
 
     @discardableResult
@@ -467,9 +424,15 @@ extension Treadmill {
         return line
     }
 
+    /// Steps onto the next multiple of the step size rather than adding to it,
+    /// so starting from the treadmill's own 0.8 km/h still lands you on 1.0,
+    /// 1.5, 2.0 instead of 1.3, 1.8, 2.3.
     @discardableResult
     func changeSpeed(by delta: Double) async throws -> String {
-        try await setSpeed(targetSpeed + delta)
+        let step = Limits.speedStep
+        let grid = (targetSpeed / step)
+        let next = (delta > 0 ? grid.rounded(.down) + 1 : grid.rounded(.up) - 1) * step
+        return try await setSpeed(next)
     }
 
     @discardableResult

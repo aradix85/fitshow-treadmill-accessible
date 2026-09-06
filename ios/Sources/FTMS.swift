@@ -20,8 +20,10 @@ enum FTMS {
 
 /// Limits and step sizes. Mirrors the constants at the top of tr600i_server.py.
 enum Limits {
-    static let speedStart  = 1.0
-    static let speedMin    = 1.0
+    /// The speed the treadmill puts itself at on start; it ignores any value
+    /// you set beforehand, so this is a fact about the machine, not a choice.
+    static let speedStart  = 0.8
+    static let speedMin    = 0.8
     static let speedMax    = 22.0
     static let speedStep   = 0.5
     static let inclineMin  = 0.0

@@ -42,8 +42,8 @@ NAAM_HINTS = ("FS-", "SYMK")
 POORT = 8000
 
 # Limits and step sizes (adjust to taste)
-SNELHEID_START = 1.0      # km/h on 'Start'
-SNELHEID_MIN = 1.0
+SNELHEID_START = 0.8      # the speed the treadmill puts itself at on 'start'
+SNELHEID_MIN = 0.8
 SNELHEID_MAX = 22.0       # TR600i factory spec; lower it to taste
 SNELHEID_STAP = 0.5       # km/h per press of faster/slower
 HELLING_MIN = 0.0
@@ -82,8 +82,6 @@ class Toestand:
         self.calorieen = 0
         self.status = "connecting..."
         self.lock = asyncio.Lock()
-        # Set when Training Status reports 0x0d: the belt is really moving.
-        self.echt_lopend = asyncio.Event()
         # The incline survives a power cycle, so adopt the measured value once.
         self.helling_overgenomen = False
 
@@ -203,24 +201,29 @@ async def stuur(payload: bytes):
 
 
 # ---- Commands translated to bytes ----
-async def cmd_start(snelheid):
-    """Start the belt and then set the speed.
+async def cmd_start():
+    """Start the belt.
 
-    A speed sent before or during the warm-up phase is discarded: the treadmill
-    forces itself to 0.8 km/h the moment the belt engages. So we wait for
-    Training Status 0x0d and only then send the speed we actually want.
+    The treadmill always starts at its own 0.8 km/h and discards any speed set
+    beforehand, so we don't fight it: we report what it actually does and you
+    adjust from there.
     """
-    S.echt_lopend.clear()
     await stuur(bytes([OP_RESET]))
     await stuur(bytes([OP_START]))
-    try:
-        await asyncio.wait_for(S.echt_lopend.wait(), timeout=9)
-    except asyncio.TimeoutError:
-        print("(treadmill never reported 'running'; setting speed anyway)")
-    v = int(round(snelheid * 100))
-    await stuur(bytes([OP_SET_SPEED]) + v.to_bytes(2, "little"))
-    S.ingesteld_snelheid = snelheid
+    S.ingesteld_snelheid = SNELHEID_START
     S.lopend = True
+
+
+def volgende_stap(huidig, richting):
+    """Step onto the next multiple of SNELHEID_STAP instead of adding to it.
+
+    The treadmill starts itself at 0.8 km/h; plain addition would then walk you
+    through 1.3, 1.8, 2.3. Snapping to the grid gives 1.0, 1.5, 2.0 instead.
+    """
+    raster = huidig / SNELHEID_STAP
+    import math
+    n = math.floor(raster) + 1 if richting > 0 else math.ceil(raster) - 1
+    return n * SNELHEID_STAP
 
 
 async def cmd_snelheid(snelheid):
@@ -258,7 +261,6 @@ async def bluetooth_taak():
                 S.verbonden = True
                 S.status = "connected, ready"
                 S.helling_overgenomen = False   # re-adopt on every reconnect
-                S.echt_lopend.clear()
                 print("Connected.")
 
                 def op_data(_, d):
@@ -284,10 +286,7 @@ async def bluetooth_taak():
                         codes = {0x01: "ready", 0x0d: "running",
                                  0x0e: "warming up", 0x0f: "cooling down"}
                         S.status = codes.get(d[1], f"status {d[1]}")
-                        if d[1] == 0x0d:
-                            S.echt_lopend.set()   # only now does a speed stick
-                        elif d[1] in (0x01, 0x0f):
-                            S.echt_lopend.clear()
+                        if d[1] in (0x01, 0x0f):
                             S.lopend = False
 
                 def op_machine(_, d):
@@ -489,16 +488,16 @@ async def cmd(actie):
 
     melding = ""
     if actie == "start":
-        await cmd_start(SNELHEID_START)
-        melding = f"Started at {SNELHEID_START:.0f} kilometers per hour."
+        await cmd_start()
+        melding = f"Started at {SNELHEID_START:.1f} kilometers per hour."
     elif actie == "stop":
         await cmd_stop()
         melding = "Stopped."
     elif actie == "sneller":
-        await cmd_snelheid(S.ingesteld_snelheid + SNELHEID_STAP)
+        await cmd_snelheid(volgende_stap(S.ingesteld_snelheid, +1))
         melding = f"Speed {S.ingesteld_snelheid:.1f} kilometers per hour."
     elif actie == "langzamer":
-        await cmd_snelheid(S.ingesteld_snelheid - SNELHEID_STAP)
+        await cmd_snelheid(volgende_stap(S.ingesteld_snelheid, -1))
         melding = f"Speed {S.ingesteld_snelheid:.1f} kilometers per hour."
     elif actie == "helling_omhoog":
         await cmd_helling(S.ingesteld_helling + HELLING_STAP)
