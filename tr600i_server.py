@@ -82,20 +82,30 @@ class Toestand:
         self.calorieen = 0
         self.status = "connecting..."
         self.lock = asyncio.Lock()
+        # Set when Training Status reports 0x0d: the belt is really moving.
+        self.echt_lopend = asyncio.Event()
+        # The incline survives a power cycle, so adopt the measured value once.
+        self.helling_overgenomen = False
 
 S = Toestand()
 
 
 def parse_treadmill_data(data: bytearray) -> dict:
     """Parse FTMS Treadmill Data. Field order follows the flags (little-endian).
-    Bit 0 == 0 means: instantaneous speed PRESENT (that's how FTMS defines it)."""
+
+    Bit 0 == 0 means: instantaneous speed PRESENT (that's how FTMS defines it).
+    This treadmill sends TWO kinds of notification on 2ACD, alternating: the
+    real 19-byte packet with flags 0x058c, and a 5-byte one with flags 0x2001
+    where bit 0 IS set, so it carries no speed. Reading bytes 2-3 regardless
+    made every other update report 0.0 km/h.
+    """
     out = {}
     if len(data) < 2:
         return out
     flags = int.from_bytes(data[0:2], "little")
     i = 2
-    # Instantaneous speed (always present on this treadmill)
-    if i + 2 <= len(data):
+    # Instantaneous speed - only when bit 0 is clear.
+    if not (flags & 1) and i + 2 <= len(data):
         out["snelheid"] = int.from_bytes(data[i:i+2], "little") / 100; i += 2
     if flags & (1 << 1) and i + 2 <= len(data):  # average speed
         i += 2
@@ -194,10 +204,21 @@ async def stuur(payload: bytes):
 
 # ---- Commands translated to bytes ----
 async def cmd_start(snelheid):
+    """Start the belt and then set the speed.
+
+    A speed sent before or during the warm-up phase is discarded: the treadmill
+    forces itself to 0.8 km/h the moment the belt engages. So we wait for
+    Training Status 0x0d and only then send the speed we actually want.
+    """
+    S.echt_lopend.clear()
     await stuur(bytes([OP_RESET]))
+    await stuur(bytes([OP_START]))
+    try:
+        await asyncio.wait_for(S.echt_lopend.wait(), timeout=9)
+    except asyncio.TimeoutError:
+        print("(treadmill never reported 'running'; setting speed anyway)")
     v = int(round(snelheid * 100))
     await stuur(bytes([OP_SET_SPEED]) + v.to_bytes(2, "little"))
-    await stuur(bytes([OP_START]))
     S.ingesteld_snelheid = snelheid
     S.lopend = True
 
@@ -236,6 +257,8 @@ async def bluetooth_taak():
                 S.client = client
                 S.verbonden = True
                 S.status = "connected, ready"
+                S.helling_overgenomen = False   # re-adopt on every reconnect
+                S.echt_lopend.clear()
                 print("Connected.")
 
                 def op_data(_, d):
@@ -244,6 +267,11 @@ async def bluetooth_taak():
                         S.snelheid = p["snelheid"]
                     if "helling" in p:
                         S.helling = p["helling"]
+                        # The belt keeps its incline when switched off, so trust
+                        # the machine over our own zero on the first reading.
+                        if not S.helling_overgenomen:
+                            S.ingesteld_helling = p["helling"]
+                            S.helling_overgenomen = True
                     if "afstand_m" in p:
                         S.afstand_m = p["afstand_m"]
                     if "tijd_s" in p:
@@ -256,6 +284,11 @@ async def bluetooth_taak():
                         codes = {0x01: "ready", 0x0d: "running",
                                  0x0e: "warming up", 0x0f: "cooling down"}
                         S.status = codes.get(d[1], f"status {d[1]}")
+                        if d[1] == 0x0d:
+                            S.echt_lopend.set()   # only now does a speed stick
+                        elif d[1] in (0x01, 0x0f):
+                            S.echt_lopend.clear()
+                            S.lopend = False
 
                 def op_machine(_, d):
                     if d and d[0] == 0x02:
